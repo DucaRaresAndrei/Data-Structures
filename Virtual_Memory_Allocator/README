@@ -1,0 +1,63 @@
+Duca Andrei-Rares
+311CA
+
+	Main program:
+  The algorithm continues execution as long as commands are entered.
+  Through the variable "ok" we will find out if it is a valid command, for which
+we will apply its specially created function, or we will show the viewer that he
+entered a wrong command.
+
+	Functions used:
+	
+-get_perms(char line[LMAX]) : we read the permissions and convert from char to
+be able to work on bits
+
+-create_mnblk(uint64_t start, size_t size) : this allocate the memory of the new
+miniblock and initialize its buffer, and leave its initial permissions at rw-,
+using bitwise operation
+
+-remove_nth_mnblk(block_t *block, unsigned int n) : it deletes the asked
+miniblock from the list and return its address so that later we can add this
+miniblock to the list of another block, or delete it from memory
+using free_mnblk(dll_node_t *mnblk)
+
+-add_miniblk(block_t *block, dll_node_t *new_mnb, int direction) : the function 
+is used to initiate a block with a single miniblock, adding it as head and tail 
+of the list, or to add to a list that already has other miniblocks, the current 
+miniblock at the beginning or end of the list. We use this function when adding 
+a neighboring block with another already existing one, or when breaking a block 
+in 2, during the delete operation
+
+-add_nth_block(list_t *list, const uint64_t address, int n, const uint64_t size)
+and remove_nth_block(list_t *list, int n) : initializes a block at a requested 
+address; and the second deletes the desired block
+
+-write_text(dll_node_t *node, uint64_t address, uint64_t size, int8_t *data) :
+this function is called only when we have write permissions. It writes within 
+the block and the miniblock starting with the "address" and length "size"
+
+-read_text(dll_node_t *node, uint64_t address, uint64_t size) : the same as the 
+function above, only that here it is displayed from the buffer
+
+-alloc_arena(const uint64_t size) : the function starts the execution of the 
+program and initializes the arena and the list of blocks
+
+-alloc_block(arena_t *arena, const uint64_t address, const uint64_t size) : 
+check if we add the new block at the beginning, the end of the list, or if we 
+attach it to the middle of the list independently or united with its direct 
+neighbors
+
+-free_block(arena_t *arena, const uint64_t address) : check if we delete the 
+block completely, delete only the miniblock, or break the block in 2 by deleting
+the miniblock
+
+-read(arena_t *arena, uint64_t address, uint64_t size) : check if we have read 
+permissions and call the program that will display the buffer on the screen
+
+-pmap(const arena_t *arena) : displays the information about each block along 
+with the miniblocks in its list, as well as the total memory occupied by the 
+arena and the available memory
+
+-mprotect(arena_t *arena, uint64_t address, int8_t *permission) : receives the 
+permissions and the miniblock to which we want to be changed. Applying the bit 
+operations again it will make the change
